@@ -1,5 +1,5 @@
 """AI bug triage agent package."""
 
-from .aws_infra import AWSInfrastructure
+from .terraform_infra import TerraformInfrastructure
 
-__all__ = ["AWSInfrastructure"]
+__all__ = ["TerraformInfrastructure"]
