@@ -3,7 +3,14 @@ import requests
 
 
 class JiraConnector:
-    def __init__(self, base_url: str, username: str, token: str):
+    def __init__(self, base_url: str | None, username: str | None, token: str | None):
+        """Simple wrapper around the Jira REST API."""
+        if not base_url:
+            raise ValueError("JIRA_URL environment variable is required")
+        if not username or not token:
+            raise ValueError("JIRA_USER and JIRA_TOKEN must be set")
+
+
         self.base_url = base_url.rstrip("/")
         self.auth = (username, token)
 
