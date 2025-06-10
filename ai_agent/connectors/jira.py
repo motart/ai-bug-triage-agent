@@ -10,6 +10,7 @@ class JiraConnector:
         if not username or not token:
             raise ValueError("JIRA_USER and JIRA_TOKEN must be set")
 
+
         self.base_url = base_url.rstrip("/")
         self.auth = (username, token)
 

@@ -2,6 +2,7 @@
 
 This project provides a skeleton implementation for an AI-driven bug triage agent. The agent fetches bugs from Jira, analyzes the code base, suggests fixes, and creates code reviews in GitHub or Perforce Swarm. Infrastructure is created on AWS using Terraform, and the agent can be extended to learn from reviewer feedback.
 
+
 ## Features
 - **Jira Integration** – Retrieve open bugs from a Jira project using the REST API.
 - **Code Analysis** – Analyze bug descriptions and affected files to generate a suggested fix (placeholder logic).
@@ -18,6 +19,7 @@ Set the following environment variables as needed:
 - For Perforce: `P4PORT`, `P4USER`, `P4TICKET`.
 - To provision infrastructure with Terraform, set `TERRAFORM_DIR` to the
   directory containing your Terraform configuration.
+
 
 Run the agent with:
 

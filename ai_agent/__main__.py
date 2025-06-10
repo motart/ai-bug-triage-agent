@@ -7,6 +7,7 @@ from .agent import BugTriageAgent
 from .terraform_infra import TerraformInfrastructure
 
 
+
 def main():
     jira_url = os.environ.get("JIRA_URL")
     jira_user = os.environ.get("JIRA_USER")
@@ -15,6 +16,7 @@ def main():
 
     if not all([jira_url, jira_user, jira_token, project_key]):
         raise SystemExit("JIRA_URL, JIRA_USER, JIRA_TOKEN and JIRA_PROJECT must be set")
+
     vcs_type = os.environ.get("VCS_TYPE", "git")
 
     jira = JiraConnector(jira_url, jira_user, jira_token)
@@ -25,6 +27,7 @@ def main():
         gh_token = os.environ.get("GITHUB_TOKEN")
         if not repo or not gh_token:
             raise SystemExit("GITHUB_REPO and GITHUB_TOKEN must be set for GitHub")
+
         vcs = GitHubConnector(repo, gh_token)
     else:
         p4port = os.environ.get("P4PORT")
@@ -38,6 +41,7 @@ def main():
     if tf_dir:
         infra = TerraformInfrastructure(tf_dir)
         infra.apply()
+
 
     agent = BugTriageAgent(jira, vcs, analyzer)
     agent.triage(project_key)
