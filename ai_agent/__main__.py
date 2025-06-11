@@ -21,6 +21,7 @@ def main():
         raise SystemExit("JIRA_URL, JIRA_USER, JIRA_TOKEN and JIRA_PROJECT must be set")
 
     vcs_type = os.environ.get("VCS_TYPE", "git")
+    review_platform = os.environ.get("REVIEW_PLATFORM")
 
     jira = JiraConnector(jira_url, jira_user, jira_token)
     analyzer = CodeAnalyzer()
@@ -40,12 +41,15 @@ def main():
             raise SystemExit("P4PORT, P4USER and P4TICKET must be set for Perforce")
         vcs = PerforceConnector(p4port, p4user, p4ticket)
 
+    if not review_platform:
+        review_platform = "github_pr" if vcs_type == "git" else "swarm"
+
+    agent = BugTriageAgent(jira, vcs, analyzer, review_platform)
+
     tf_dir = os.environ.get("TERRAFORM_DIR")
     if tf_dir:
         infra = TerraformInfrastructure(tf_dir)
         infra.apply()
-
-    agent = BugTriageAgent(jira, vcs, analyzer)
 
     ws_url = os.environ.get("JIRA_WS_URL")
     if ws_url:

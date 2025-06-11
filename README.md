@@ -6,7 +6,10 @@ This project provides a skeleton implementation for an AI-driven bug triage agen
 ## Features
 - **Jira Integration** – Retrieve open bugs from a Jira project using the REST API.
 - **Code Analysis** – Analyze bug descriptions and affected files to generate a suggested fix (placeholder logic).
-- **Version Control Support** – Connect to GitHub or Perforce and create pull requests or Swarm reviews.
+- **Version Control Support** – Connect to GitHub or Perforce and create GitHub
+  pull requests or Swarm reviews. The version control system is set with
+  `VCS_TYPE` and the review platform with `REVIEW_PLATFORM` (use `github_pr` for
+  GitHub Pull Requests or `swarm` for Swarm reviews).
 - **Extensibility** – Placeholder hooks for incorporating AI models and learning from reviewer feedback.
 
 ## Running the Agent
@@ -31,6 +34,9 @@ The variables include:
   Jira project keys are typically uppercase; any extra whitespace will be
   stripped automatically when querying issues.
 - `VCS_TYPE` – `git` for GitHub (default) or `p4` for Perforce.
+- `REVIEW_PLATFORM` – `github_pr` for GitHub Pull Requests or `swarm` for Swarm
+  reviews. If unset, it defaults to the typical review method for the selected
+  VCS type.
 - For GitHub: `GITHUB_REPO`, `GITHUB_TOKEN`.
 - For Perforce: `P4PORT`, `P4USER`, `P4TICKET`.
 - To provision infrastructure with Terraform, set `TERRAFORM_DIR` to the
