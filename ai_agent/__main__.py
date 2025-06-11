@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 from .connectors.jira import JiraConnector
 from .connectors.perforce import PerforceConnector
 from .connectors.github import GitHubConnector
@@ -9,6 +10,7 @@ from .terraform_infra import TerraformInfrastructure
 
 
 def main():
+    load_dotenv()
     jira_url = os.environ.get("JIRA_URL")
     jira_user = os.environ.get("JIRA_USER")
     jira_token = os.environ.get("JIRA_TOKEN")
