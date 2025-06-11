@@ -1,8 +1,15 @@
 import os
-import json
 from typing import Optional
 
-from dotenv import load_dotenv
+try:  # handle missing dependency gracefully
+    from dotenv import load_dotenv
+except ModuleNotFoundError:  # pragma: no cover - optional dependency
+    def load_dotenv() -> None:  # type: ignore
+        """Fallback when python-dotenv is not installed."""
+        return
+
+import json
+from typing import Optional
 from flask import Flask, request, jsonify
 
 from .connectors.jira import JiraConnector
@@ -54,14 +61,28 @@ def init_agent() -> BugTriageAgent:
 
 @app.route("/webhook", methods=["POST"])
 def webhook() -> tuple:
-    """Handle Jira webhook calls."""
+    """Handle Jira webhook calls for newly created bug issues."""
     payload = request.get_json(force=True)
-    issue = payload.get("issue") if isinstance(payload, dict) else None
-    issue = issue or payload
-    if issue:
-        agent.process_bug(issue)
-        return jsonify({"status": "processed"}), 200
-    return jsonify({"error": "no issue payload"}), 400
+    if not isinstance(payload, dict):
+        return jsonify({"error": "invalid payload"}), 400
+
+    issue = payload.get("issue")
+    if not issue:
+        return jsonify({"error": "no issue payload"}), 400
+
+    event = payload.get("issue_event_type_name") or payload.get("webhookEvent")
+    if event and "created" in str(event).lower():
+        issuetype = (
+            issue.get("fields", {})
+            .get("issuetype", {})
+            .get("name", "")
+            .lower()
+        )
+        if issuetype == "bug":
+            agent.process_bug(issue)
+            return jsonify({"status": "processed"}), 200
+        return jsonify({"status": "ignored", "reason": "not a bug"}), 200
+    return jsonify({"status": "ignored", "reason": "not a creation event"}), 200
 
 
 def main() -> None:
@@ -74,7 +95,10 @@ def main() -> None:
         infra.apply()
 
     port = int(os.environ.get("PORT", 8000))
-    app.run(host="0.0.0.0", port=port)
+    host = os.environ.get("HOST", "0.0.0.0")
+    print(f"Starting webhook server on {host}:{port}")
+    app.run(host=host, port=port)
+
 
 
 if __name__ == "__main__":
