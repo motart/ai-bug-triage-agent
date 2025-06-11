@@ -17,4 +17,4 @@ P4EOF
     /usr/bin/p4 -p localhost:$P4PORT admin stop
 fi
 
-exec p4d -r "$P4ROOT" -p "$P4PORT" -d --foreground
+exec p4d -r "$P4ROOT" -p "$P4PORT"
