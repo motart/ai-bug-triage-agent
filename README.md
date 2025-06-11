@@ -28,6 +28,8 @@ cp .env.example .env
 The variables include:
 
 - `JIRA_URL`, `JIRA_USER`, `JIRA_TOKEN`, `JIRA_PROJECT` – Jira connection details.
+  Jira project keys are typically uppercase; any extra whitespace will be
+  stripped automatically when querying issues.
 - `VCS_TYPE` – `git` for GitHub (default) or `p4` for Perforce.
 - For GitHub: `GITHUB_REPO`, `GITHUB_TOKEN`.
 - For Perforce: `P4PORT`, `P4USER`, `P4TICKET`.
