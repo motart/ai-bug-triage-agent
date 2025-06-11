@@ -59,11 +59,11 @@ docker compose -f infrastructure/Perforce/docker-compose.yml up --build -d
 ```
 
 When the container starts for the first time it creates a default super user
-named `admin` with password `admin`. Use these credentials to log in and set up
-additional users or change the password:
+named `admin` with no password set. You can connect immediately without running
+`p4 login`. If you want to secure the account later, set a password with:
 
 ```bash
-p4 -p localhost:1666 -u admin login
+p4 -p localhost:1666 passwd admin
 ```
 
 The container downloads the `p4d` binary from Perforce. If the download fails, ensure the URL in the Dockerfile matches an available release or update `P4D_VERSION` to the desired version.
