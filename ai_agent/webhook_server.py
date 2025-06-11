@@ -8,6 +8,8 @@ except ModuleNotFoundError:  # pragma: no cover - optional dependency
         """Fallback when python-dotenv is not installed."""
         return
 
+import json
+from typing import Optional
 from flask import Flask, request, jsonify
 
 from .connectors.jira import JiraConnector
@@ -96,6 +98,7 @@ def main() -> None:
     host = os.environ.get("HOST", "0.0.0.0")
     print(f"Starting webhook server on {host}:{port}")
     app.run(host=host, port=port)
+
 
 
 if __name__ == "__main__":

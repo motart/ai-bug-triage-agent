@@ -69,6 +69,7 @@ Configure your Jira project to send "issue created" webhooks to the `/webhook`
 endpoint of this server. Only issues of type **Bug** are processed. Incoming
 payloads are handled immediately by the agent.
 
+
 ## Terraform Infrastructure
 
 Infrastructure is created with Terraform using the
