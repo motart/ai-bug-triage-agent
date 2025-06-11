@@ -15,10 +15,27 @@ class JiraConnector:
         self.auth = (username, token)
 
     def get_open_bugs(self, project_key: str):
-        """Fetch open bug issues from Jira."""
+        """Fetch open bug issues from Jira.
+
+        Parameters
+        ----------
+        project_key: str
+            Key of the Jira project. Jira keys are typically uppercase, but
+            any leading/trailing whitespace will be stripped and the key will
+            be converted to uppercase automatically.
+        """
+
+        project_key = project_key.strip().upper()
         jql = f"project={project_key} AND issuetype=Bug AND status!=Done"
         url = f"{self.base_url}/rest/api/2/search"
         response = requests.get(url, params={"jql": jql}, auth=self.auth)
-        response.raise_for_status()
+        try:
+            response.raise_for_status()
+        except requests.HTTPError as exc:
+            msg = response.text.strip()
+            raise requests.HTTPError(
+                f"Failed to query Jira: {msg or response.reason}",
+                response=response,
+            ) from exc
         data = response.json()
         return data.get("issues", [])
