@@ -15,12 +15,16 @@ class BugTriageAgent:
     def triage(self, project_key: str):
         bugs = self.jira.get_open_bugs(project_key)
         for bug in bugs:
-            key = bug["key"]
-            summary = bug["fields"]["summary"]
-            files = self.find_related_files(bug)
-            fix = self.analyzer.analyze_bug(summary, files)
-            review_url = self.create_review(summary, fix)
-            print(f"Created review for {key}: {review_url}")
+            self.process_bug(bug)
+
+    def process_bug(self, bug) -> None:
+        """Run analysis and create a review for a single bug."""
+        key = bug["key"]
+        summary = bug["fields"]["summary"]
+        files = self.find_related_files(bug)
+        fix = self.analyzer.analyze_bug(summary, files)
+        review_url = self.create_review(summary, fix)
+        print(f"Created review for {key}: {review_url}")
 
     def find_related_files(self, bug) -> List[str]:
         # Placeholder: use bug data to locate affected files

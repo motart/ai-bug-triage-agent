@@ -33,6 +33,8 @@ The variables include:
 - For Perforce: `P4PORT`, `P4USER`, `P4TICKET`.
 - To provision infrastructure with Terraform, set `TERRAFORM_DIR` to the
   directory containing your Terraform configuration.
+- To listen for new bugs over a WebSocket, set `JIRA_WS_URL` to the
+  endpoint providing bug create events.
 
 
 Run the agent and the variables in `.env` will be loaded automatically:
@@ -40,6 +42,9 @@ Run the agent and the variables in `.env` will be loaded automatically:
 ```bash
 python -m ai_agent
 ```
+
+If `JIRA_WS_URL` is defined, the agent connects to that WebSocket and
+processes bugs as they are reported instead of fetching them from Jira.
 
 ## Terraform Infrastructure
 
