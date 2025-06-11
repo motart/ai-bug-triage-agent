@@ -3,3 +3,5 @@ requests
 boto3
 python-dotenv
 websocket-client
+
+flask

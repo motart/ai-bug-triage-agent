@@ -54,6 +54,18 @@ python -m ai_agent
 If `JIRA_WS_URL` is defined, the agent connects to that WebSocket and
 processes bugs as they are reported instead of fetching them from Jira.
 
+## Webhook Server
+
+To run a persistent server that handles Jira webhook events, start:
+
+```bash
+python -m ai_agent.webhook_server
+```
+
+Configure your Jira project to send issue created webhooks to the `/webhook`
+endpoint of this server. Incoming bug payloads are processed immediately by the
+agent.
+
 ## Terraform Infrastructure
 
 Infrastructure is created with Terraform using the
