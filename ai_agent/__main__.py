@@ -6,6 +6,7 @@ from .connectors.github import GitHubConnector
 from .analysis import CodeAnalyzer
 from .agent import BugTriageAgent
 from .terraform_infra import TerraformInfrastructure
+from .connectors.jira_ws import JiraWebSocketClient
 
 
 
@@ -44,9 +45,14 @@ def main():
         infra = TerraformInfrastructure(tf_dir)
         infra.apply()
 
-
     agent = BugTriageAgent(jira, vcs, analyzer)
-    agent.triage(project_key)
+
+    ws_url = os.environ.get("JIRA_WS_URL")
+    if ws_url:
+        ws = JiraWebSocketClient(ws_url)
+        ws.listen(agent.process_bug)
+    else:
+        agent.triage(project_key)
 
 
 if __name__ == "__main__":

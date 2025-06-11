@@ -28,11 +28,15 @@ cp .env.example .env
 The variables include:
 
 - `JIRA_URL`, `JIRA_USER`, `JIRA_TOKEN`, `JIRA_PROJECT` – Jira connection details.
+  Jira project keys are typically uppercase; any extra whitespace will be
+  stripped automatically when querying issues.
 - `VCS_TYPE` – `git` for GitHub (default) or `p4` for Perforce.
 - For GitHub: `GITHUB_REPO`, `GITHUB_TOKEN`.
 - For Perforce: `P4PORT`, `P4USER`, `P4TICKET`.
 - To provision infrastructure with Terraform, set `TERRAFORM_DIR` to the
   directory containing your Terraform configuration.
+- To listen for new bugs over a WebSocket, set `JIRA_WS_URL` to the
+  endpoint providing bug create events.
 
 
 Run the agent and the variables in `.env` will be loaded automatically:
@@ -40,6 +44,9 @@ Run the agent and the variables in `.env` will be loaded automatically:
 ```bash
 python -m ai_agent
 ```
+
+If `JIRA_WS_URL` is defined, the agent connects to that WebSocket and
+processes bugs as they are reported instead of fetching them from Jira.
 
 ## Terraform Infrastructure
 
