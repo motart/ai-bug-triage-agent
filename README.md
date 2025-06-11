@@ -11,7 +11,15 @@ This project provides a skeleton implementation for an AI-driven bug triage agen
 
 ## Running the Agent
 
-Set the following environment variables as needed:
+Configuration is handled via environment variables.  Copy `.env.example` to
+`.env` and fill in the appropriate values:
+
+```
+cp .env.example .env
+# edit .env with your editor of choice
+```
+
+The variables include:
 
 - `JIRA_URL`, `JIRA_USER`, `JIRA_TOKEN`, `JIRA_PROJECT` – Jira connection details.
 - `VCS_TYPE` – `git` for GitHub (default) or `p4` for Perforce.
@@ -21,7 +29,7 @@ Set the following environment variables as needed:
   directory containing your Terraform configuration.
 
 
-Run the agent with:
+Run the agent and the variables in `.env` will be loaded automatically:
 
 ```bash
 python -m ai_agent
