@@ -59,6 +59,14 @@ docker build -t p4d-server docker/perforce
 docker run -d --name p4d -p 1666:1666 p4d-server
 ```
 
+When the container starts for the first time it creates a default super user
+named `admin` with password `admin`. Use these credentials to log in and set up
+additional users or change the password:
+
+```bash
+p4 -p localhost:1666 -u admin login
+```
+
 The container downloads the `p4d` binary from Perforce. If the download fails, ensure the URL in the Dockerfile matches an available release or update `P4D_VERSION` to the desired version.
 
 ## Notes
