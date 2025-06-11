@@ -43,6 +43,7 @@ The variables include:
   directory containing your Terraform configuration.
 - To listen for new bugs over a WebSocket, set `JIRA_WS_URL` to the
   endpoint providing bug create events.
+- `PORT` and `HOST` allow configuring the webhook server's port and host.
 
 
 Run the agent and the variables in `.env` will be loaded automatically:
@@ -53,6 +54,20 @@ python -m ai_agent
 
 If `JIRA_WS_URL` is defined, the agent connects to that WebSocket and
 processes bugs as they are reported instead of fetching them from Jira.
+
+## Webhook Server
+
+To run a persistent server that handles Jira webhook events, set the desired
+`PORT` (defaults to `8000`) and optional `HOST` (defaults to `0.0.0.0`) and
+start:
+
+```bash
+python -m ai_agent.webhook_server
+```
+
+Configure your Jira project to send "issue created" webhooks to the `/webhook`
+endpoint of this server. Only issues of type **Bug** are processed. Incoming
+payloads are handled immediately by the agent.
 
 ## Terraform Infrastructure
 
