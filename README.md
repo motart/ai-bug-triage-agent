@@ -49,5 +49,18 @@ Infrastructure is created with Terraform using the
 configuration files. The helper will run `terraform init` and `terraform apply
 -auto-approve` prior to running the agent.
 
+## Running a Local Perforce Server with Docker
+
+A simple Dockerfile is provided in `docker/perforce` for running a Perforce (p4d) server. Build the image and start the container to expose the server on port `1666`:
+
+```bash
+docker build -t p4d-server docker/perforce
+
+docker run -d --name p4d -p 1666:1666 p4d-server
+```
+
+The container downloads the `p4d` binary from Perforce. If the download fails, ensure the URL in the Dockerfile matches an available release or update `P4D_VERSION` to the desired version.
+
 ## Notes
 This codebase provides a starting point only. Actual integration with Jira, Perforce, GitHub, and AWS requires additional configuration and authentication setup. The code analysis and learning components are simplified placeholders.
+
