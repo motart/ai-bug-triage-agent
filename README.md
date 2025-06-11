@@ -51,12 +51,11 @@ configuration files. The helper will run `terraform init` and `terraform apply
 
 ## Running a Local Perforce Server with Docker
 
-A simple Dockerfile is provided in `docker/perforce` for running a Perforce (p4d) server. Build the image and start the container to expose the server on port `1666`:
+A Docker Compose setup is provided in `infrastructure/Perforce` for running a
+Perforce (p4d) server. Start the service to expose the server on port `1666`:
 
 ```bash
-docker build -t p4d-server docker/perforce
-
-docker run -d --name p4d -p 1666:1666 p4d-server
+docker compose -f infrastructure/Perforce/docker-compose.yml up --build -d
 ```
 
 When the container starts for the first time it creates a default super user
