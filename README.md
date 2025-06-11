@@ -11,7 +11,13 @@ This project provides a skeleton implementation for an AI-driven bug triage agen
 
 ## Running the Agent
 
-Configuration is handled via environment variables.  Copy `.env.example` to
+First install the Python dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Configuration is handled via environment variables. Copy `.env.example` to
 `.env` and fill in the appropriate values:
 
 ```
