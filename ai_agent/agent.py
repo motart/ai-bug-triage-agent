@@ -7,10 +7,11 @@ from .analysis import CodeAnalyzer
 
 
 class BugTriageAgent:
-    def __init__(self, jira: JiraConnector, vcs, analyzer: CodeAnalyzer):
+    def __init__(self, jira: JiraConnector, vcs, analyzer: CodeAnalyzer, review_platform: str):
         self.jira = jira
         self.vcs = vcs
         self.analyzer = analyzer
+        self.review_platform = review_platform
 
     def triage(self, project_key: str):
         bugs = self.jira.get_open_bugs(project_key)
@@ -31,16 +32,16 @@ class BugTriageAgent:
         return []
 
     def create_review(self, summary: str, fix: dict):
-        if isinstance(self.vcs, GitHubConnector):
-            pr = self.vcs.create_pull_request(
+        if self.review_platform == "github_pr" and isinstance(self.vcs, GitHubConnector):
+            github_pr = self.vcs.create_pull_request(
                 title=f"Fix: {summary}",
                 head="bugfix",  # placeholder branch
                 base="main",
                 body="Automated fix",
             )
-            return pr.get("html_url")
-        elif isinstance(self.vcs, PerforceConnector):
+            return github_pr.get("html_url")
+        elif self.review_platform == "swarm" and isinstance(self.vcs, PerforceConnector):
             review = self.vcs.create_swarm_review(summary, list(fix.keys()))
             return review.get("review_url")
         else:
-            raise ValueError("Unsupported VCS")
+            raise ValueError("Unsupported review platform for the configured VCS")
