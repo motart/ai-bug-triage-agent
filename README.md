@@ -56,15 +56,16 @@ processes bugs as they are reported instead of fetching them from Jira.
 
 ## Webhook Server
 
-To run a persistent server that handles Jira webhook events, start:
+To run a persistent server that handles Jira webhook events, set the desired
+`PORT` (defaults to `8000`) and start:
 
 ```bash
 python -m ai_agent.webhook_server
 ```
 
-Configure your Jira project to send issue created webhooks to the `/webhook`
-endpoint of this server. Incoming bug payloads are processed immediately by the
-agent.
+Configure your Jira project to send "issue created" webhooks to the `/webhook`
+endpoint of this server. Only issues of type **Bug** are processed. Incoming
+payloads are handled immediately by the agent.
 
 ## Terraform Infrastructure
 
