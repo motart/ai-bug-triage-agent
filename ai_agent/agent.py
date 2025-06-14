@@ -23,14 +23,24 @@ class BugTriageAgent:
     def process_bug(self, bug) -> None:
         """Run analysis and create a review for a single bug."""
         key = bug["key"]
-        summary = bug["fields"]["summary"]
-        files = self.find_related_files(bug)
-        fix = self.analyzer.analyze_bug(summary, files)
+        fields = bug.get("fields", {})
+        summary = fields.get("summary", "")
+        description = fields.get("description", "") or ""
+        files = self.find_related_files(summary, description)
+        fix = self.analyzer.analyze_bug(summary, description, files)
         review_url = self.create_review(key, summary, fix)
         print(f"Created review for {key}: {review_url}")
 
-    def find_related_files(self, bug) -> List[str]:
-        # Placeholder: use bug data to locate affected files
+    def find_related_files(self, title: str, description: str) -> List[str]:
+        """Try to locate relevant files using bug text."""
+
+        words = {
+            w.strip(".,").lower()
+            for w in (title + " " + description).split()
+            if len(w) > 3
+        }
+        if isinstance(self.vcs, GitHubConnector):
+            return self.vcs.search_code(list(words))
         return []
 
     def create_review(self, bug_key: str, summary: str, fix: dict):

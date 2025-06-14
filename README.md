@@ -5,7 +5,7 @@ This project provides a skeleton implementation for an AI-driven bug triage agen
 
 ## Features
 - **Jira Integration** – Retrieve open bugs from a Jira project using the REST API.
-- **Code Analysis** – Analyze bug descriptions and affected files to generate a suggested fix (placeholder logic).
+- **Code Analysis** – Analyze bug titles and descriptions and locate affected files using the GitHub code search API to generate a suggested fix (placeholder logic).
 - **Version Control Support** – Connect to GitHub or Perforce and create GitHub
   pull requests or Swarm reviews. The version control system is set with
   `VCS_TYPE` and the review platform with `REVIEW_PLATFORM` (use `github_pr` for
@@ -66,8 +66,9 @@ python -m ai_agent.webhook_server
 ```
 
 Configure your Jira project to send "issue created" webhooks to the `/webhook`
-endpoint of this server. Only issues of type **Bug** are processed. Incoming
-payloads are handled immediately by the agent.
+endpoint of this server. The handler accepts `POST` (and optional `GET`) requests
+and only processes issues of type **Bug**. Incoming payloads are handled
+immediately by the agent.
 
 
 ## Terraform Infrastructure
