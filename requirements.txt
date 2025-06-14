@@ -5,3 +5,5 @@ python-dotenv
 websocket-client
 
 flask
+transformers
+torch
