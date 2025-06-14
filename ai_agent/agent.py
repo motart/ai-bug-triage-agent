@@ -49,6 +49,8 @@ class BugTriageAgent:
         ):
             branch = f"bugfix-{bug_key}".lower().replace(" ", "-")
             self.vcs.ensure_branch(branch, "main")
+            if fix:
+                self.vcs.commit_files(branch, fix, "Automated fix")
             github_pr = self.vcs.create_pull_request(
                 title=f"Fix: {summary}",
                 head=branch,
