@@ -22,6 +22,8 @@ class JiraWebSocketClient:
                 return
             issue = data.get("issue") or data
             if issue:
+                # Debug output so we can verify incoming tickets during development
+                print(f"Received issue via WebSocket: {json.dumps(issue)}")
                 on_bug(issue)
 
         ws = WebSocketApp(self.ws_url, on_message=_on_message)

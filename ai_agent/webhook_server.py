@@ -88,6 +88,8 @@ def webhook() -> tuple:
             .lower()
         )
         if issuetype == "bug":
+            # Show the raw issue for debugging purposes when a ticket is created
+            print(f"Received new issue via webhook: {json.dumps(issue)}")
             agent.process_bug(issue)
             return jsonify({"status": "processed"}), 200
         return jsonify({"status": "ignored", "reason": "not a bug"}), 200
