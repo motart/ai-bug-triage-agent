@@ -128,6 +128,19 @@ p4 -p localhost:1666 passwd admin
 
 The container downloads the `p4d` binary from Perforce. If the download fails, ensure the URL in the Dockerfile matches an available release or update `P4D_VERSION` to the desired version.
 
+## Learning from Tickets and Code
+
+The agent can build a small memory of past bug tickets and their fixes using open source models.
+Steps to enable this feature:
+
+1. Install the additional requirement `numpy` listed in `requirements.txt`.
+2. Set `MEMORY_FILE` to the path where the agent should store its knowledge (defaults to `memory.json`).
+3. Optionally set `MEMORY_MODEL` to a Hugging Face model for embedding bug text (defaults to `distilbert-base-uncased`).
+4. Run the agent as usual. After each bug is processed, the ticket text and generated patch are stored.
+5. When a new ticket arrives, the analyzer searches the memory for similar issues and reuses the stored solution when one is found.
+
+This simple memory grows over time and helps the agent suggest fixes based on previous reviews.
+
 ## Notes
 This codebase provides a starting point only. Actual integration with Jira, Perforce, GitHub, and AWS requires additional configuration and authentication setup. The code analysis and learning components are simplified placeholders.
 

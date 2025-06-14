@@ -29,6 +29,7 @@ class BugTriageAgent:
         files = self.find_related_files(summary, description)
         fix = self.analyzer.analyze_bug(summary, description, files)
         review_url = self.create_review(key, summary, fix)
+        self.analyzer.remember(summary, description, fix)
         print(f"Created review for {key}: {review_url}")
 
     def find_related_files(self, title: str, description: str) -> List[str]:

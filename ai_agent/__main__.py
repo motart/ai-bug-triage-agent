@@ -4,6 +4,7 @@ from .connectors.jira import JiraConnector
 from .connectors.perforce import PerforceConnector
 from .connectors.github import GitHubConnector
 from .analysis import CodeAnalyzer
+from .memory import SimpleMemory
 from .agent import BugTriageAgent
 from .terraform_infra import TerraformInfrastructure
 from .connectors.jira_ws import JiraWebSocketClient
@@ -28,7 +29,10 @@ def main():
     review_platform = os.environ.get("REVIEW_PLATFORM") or config.get("review_platform")
 
     jira = JiraConnector(jira_url, jira_user, jira_token)
-    analyzer = CodeAnalyzer()
+
+    memory_file = os.environ.get("MEMORY_FILE", "memory.json")
+    memory = SimpleMemory(path=memory_file)
+    analyzer = CodeAnalyzer(memory=memory)
 
     if vcs_type == "git":
         repo = os.environ.get("GITHUB_REPO") or config.get("github_repo")
@@ -69,3 +73,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
