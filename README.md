@@ -144,3 +144,12 @@ This simple memory grows over time and helps the agent suggest fixes based on pr
 ## Notes
 This codebase provides a starting point only. Actual integration with Jira, Perforce, GitHub, and AWS requires additional configuration and authentication setup. The code analysis and learning components are simplified placeholders.
 
+
+## Microservices
+
+Two lightweight services demonstrate how the agent's responsibilities can be split into dedicated components:
+
+- `code_learner_service` – stores code snippets so other tools can reference them when analyzing bugs.
+- `bug_analyzer_service` – wraps `CodeAnalyzer` and exposes endpoints for bug analysis and learning from reviewer feedback.
+
+Run each service with `python service.py` inside its directory. The code learner listens on port `5001` and the bug analyzer on port `5002`.
