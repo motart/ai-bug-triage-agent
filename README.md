@@ -70,6 +70,27 @@ endpoint of this server. The handler accepts `POST` (and optional `GET`) request
 and only processes issues of type **Bug**. Incoming payloads are handled
 immediately by the agent.
 
+### Exposing the Webhook Server with Cloudflare
+
+If you need a public URL while developing locally, you can use
+[Cloudflare Tunnels](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/)
+to proxy your running server. Start the server as shown above, then in another
+terminal run:
+
+```bash
+cloudflared tunnel --url http://localhost:8000
+```
+
+The command prints an address like `https://<something>.trycloudflare.com`.
+Use that URL followed by `/webhook` in your Jira configuration:
+
+```
+https://<something>.trycloudflare.com/webhook
+```
+
+The tunnel stays active only while `cloudflared` is running and provides a
+convenient static endpoint for testing.
+
 
 ## Terraform Infrastructure
 
