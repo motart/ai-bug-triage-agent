@@ -16,6 +16,7 @@ from .connectors.jira import JiraConnector
 from .connectors.github import GitHubConnector
 from .connectors.perforce import PerforceConnector
 from .analysis import CodeAnalyzer
+from .memory import SimpleMemory
 from .agent import BugTriageAgent
 from .terraform_infra import TerraformInfrastructure
 
@@ -37,7 +38,10 @@ def init_agent() -> BugTriageAgent:
     review_platform = os.environ.get("REVIEW_PLATFORM")
 
     jira = JiraConnector(jira_url, jira_user, jira_token)
-    analyzer = CodeAnalyzer()
+
+    memory_file = os.environ.get("MEMORY_FILE", "memory.json")
+    memory = SimpleMemory(path=memory_file)
+    analyzer = CodeAnalyzer(memory=memory)
 
     if vcs_type == "git":
         repo = os.environ.get("GITHUB_REPO")
@@ -114,3 +118,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
