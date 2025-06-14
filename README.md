@@ -166,3 +166,25 @@ python service.py               # or PORT=6001 python service.py
 cd bug_analyzer_service
 python service.py               # or PORT=6002 python service.py
 ```
+
+## System Design
+The following diagram illustrates the overall architecture of the bug triage system.
+
+```mermaid
+graph TD
+    Jira[Jira]
+    Webhook[Webhook Server]
+    Agent[AI Bug Triage Agent]
+    Analyzer[Bug Analyzer Service]
+    Learner[Code Learner Service]
+    VCS[VCS (GitHub/Perforce)]
+    Review[Review Platform]
+    Infra[Terraform Infrastructure]
+    Jira --> Webhook
+    Webhook --> Agent
+    Agent --> Analyzer
+    Agent --> Learner
+    Agent --> VCS
+    VCS --> Review
+    Agent --> Infra
+```
