@@ -20,12 +20,16 @@ First install the Python dependencies:
 pip install -r requirements.txt
 ```
 
-Configuration is handled via environment variables. Copy `.env.example` to
-`.env` and fill in the appropriate values:
+Configuration is handled via environment variables or an optional JSON config
+file. Copy `.env.example` to `.env` and fill in the appropriate values, or
+create `config.json` based on `config.example.json`:
 
 ```
 cp .env.example .env
 # edit .env with your editor of choice
+
+# or provide settings in config.json
+cp config.example.json config.json
 ```
 
 The variables include:
@@ -45,6 +49,10 @@ The variables include:
   endpoint providing bug create events.
 - `PORT` and `HOST` allow configuring the webhook server's port and host.
 - `HF_MODEL` specifies the Hugging Face model used for code analysis (defaults to `gpt2`).
+
+All of these keys may also be provided in a `config.json` file using the same
+names but in lowercase (e.g. `jira_url`, `github_repo`). Environment variables
+override values from the config file if both are present.
 
 
 Run the agent and the variables in `.env` will be loaded automatically:

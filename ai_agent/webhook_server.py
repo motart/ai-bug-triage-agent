@@ -18,6 +18,7 @@ from .connectors.perforce import PerforceConnector
 from .analysis import CodeAnalyzer
 from .agent import BugTriageAgent
 from .terraform_infra import TerraformInfrastructure
+from .config import load_config
 
 
 app = Flask(__name__)
@@ -27,28 +28,29 @@ agent: Optional[BugTriageAgent] = None
 def init_agent() -> BugTriageAgent:
     """Initialize the bug triage agent from environment variables."""
     load_dotenv()
-    jira_url = os.environ.get("JIRA_URL")
-    jira_user = os.environ.get("JIRA_USER")
-    jira_token = os.environ.get("JIRA_TOKEN")
+    config = load_config(os.environ.get("CONFIG_FILE"))
+    jira_url = os.environ.get("JIRA_URL") or config.get("jira_url")
+    jira_user = os.environ.get("JIRA_USER") or config.get("jira_user")
+    jira_token = os.environ.get("JIRA_TOKEN") or config.get("jira_token")
     if not all([jira_url, jira_user, jira_token]):
         raise SystemExit("JIRA_URL, JIRA_USER and JIRA_TOKEN must be set")
 
-    vcs_type = os.environ.get("VCS_TYPE", "git")
-    review_platform = os.environ.get("REVIEW_PLATFORM")
+    vcs_type = os.environ.get("VCS_TYPE") or config.get("vcs_type", "git")
+    review_platform = os.environ.get("REVIEW_PLATFORM") or config.get("review_platform")
 
     jira = JiraConnector(jira_url, jira_user, jira_token)
     analyzer = CodeAnalyzer()
 
     if vcs_type == "git":
-        repo = os.environ.get("GITHUB_REPO")
-        gh_token = os.environ.get("GITHUB_TOKEN")
+        repo = os.environ.get("GITHUB_REPO") or config.get("github_repo")
+        gh_token = os.environ.get("GITHUB_TOKEN") or config.get("github_token")
         if not repo or not gh_token:
             raise SystemExit("GITHUB_REPO and GITHUB_TOKEN must be set for GitHub")
         vcs = GitHubConnector(repo, gh_token)
     else:
-        p4port = os.environ.get("P4PORT")
-        p4user = os.environ.get("P4USER")
-        p4ticket = os.environ.get("P4TICKET")
+        p4port = os.environ.get("P4PORT") or config.get("p4port")
+        p4user = os.environ.get("P4USER") or config.get("p4user")
+        p4ticket = os.environ.get("P4TICKET") or config.get("p4ticket")
         if not all([p4port, p4user, p4ticket]):
             raise SystemExit("P4PORT, P4USER and P4TICKET must be set for Perforce")
         vcs = PerforceConnector(p4port, p4user, p4ticket)
