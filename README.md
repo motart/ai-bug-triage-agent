@@ -5,7 +5,7 @@ This project provides a skeleton implementation for an AI-driven bug triage agen
 
 ## Features
 - **Jira Integration** – Retrieve open bugs from a Jira project using the REST API.
-- **Code Analysis** – Analyze bug titles and descriptions and locate affected files using the GitHub code search API to generate a suggested fix (placeholder logic).
+- **Code Analysis** – Analyze bug titles and descriptions with an open source language model and locate affected files using the GitHub code search API to generate a suggested fix.
 - **Version Control Support** – Connect to GitHub or Perforce and create GitHub
   pull requests or Swarm reviews. The version control system is set with
   `VCS_TYPE` and the review platform with `REVIEW_PLATFORM` (use `github_pr` for
@@ -44,6 +44,7 @@ The variables include:
 - To listen for new bugs over a WebSocket, set `JIRA_WS_URL` to the
   endpoint providing bug create events.
 - `PORT` and `HOST` allow configuring the webhook server's port and host.
+- `HF_MODEL` specifies the Hugging Face model used for code analysis (defaults to `gpt2`).
 
 
 Run the agent and the variables in `.env` will be loaded automatically:
