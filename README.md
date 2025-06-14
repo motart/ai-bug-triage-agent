@@ -152,4 +152,17 @@ Two lightweight services demonstrate how the agent's responsibilities can be spl
 - `code_learner_service` – stores code snippets so other tools can reference them when analyzing bugs.
 - `bug_analyzer_service` – wraps `CodeAnalyzer` and exposes endpoints for bug analysis and learning from reviewer feedback.
 
-Run each service with `python service.py` inside its directory. The code learner listens on port `5001` and the bug analyzer on port `5002`.
+Run each service with `python service.py` in its directory. By default the code
+learner listens on port `5001` and the bug analyzer on port `5002`.
+
+To run the services simultaneously use separate terminals:
+
+```bash
+# Terminal 1: code learner
+cd code_learner_service
+python service.py               # or PORT=6001 python service.py
+
+# Terminal 2: bug analyzer
+cd bug_analyzer_service
+python service.py               # or PORT=6002 python service.py
+```
