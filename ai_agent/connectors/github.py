@@ -1,3 +1,4 @@
+import base64
 import requests
 
 
@@ -23,6 +24,24 @@ class GitHubConnector:
             payload = {"ref": f"refs/heads/{branch}", "sha": sha}
             create_resp = requests.post(create_url, json=payload, headers=self.headers)
             create_resp.raise_for_status()
+
+    def commit_files(self, branch: str, files: dict[str, str], message: str) -> None:
+        """Create or update files on the given branch."""
+
+        for path, content in files.items():
+            url = f"{self.base_url}/contents/{path}"
+            get_resp = requests.get(url, params={"ref": branch}, headers=self.headers)
+            data = {
+                "message": message,
+                "content": base64.b64encode(content.encode()).decode(),
+                "branch": branch,
+            }
+            if get_resp.status_code == 200:
+                sha = get_resp.json().get("sha")
+                if sha:
+                    data["sha"] = sha
+            put_resp = requests.put(url, json=data, headers=self.headers)
+            put_resp.raise_for_status()
 
     def create_pull_request(self, title: str, head: str, base: str, body: str):
         url = f"{self.base_url}/pulls"
