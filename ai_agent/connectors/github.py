@@ -10,6 +10,20 @@ class GitHubConnector:
             "Accept": "application/vnd.github+json",
         }
 
+    def ensure_branch(self, branch: str, base: str = "main") -> None:
+        """Create the branch if it does not exist."""
+        ref_url = f"{self.base_url}/git/ref/heads/{branch}"
+        resp = requests.get(ref_url, headers=self.headers)
+        if resp.status_code == 404:
+            base_ref_url = f"{self.base_url}/git/ref/heads/{base}"
+            base_resp = requests.get(base_ref_url, headers=self.headers)
+            base_resp.raise_for_status()
+            sha = base_resp.json().get("object", {}).get("sha")
+            create_url = f"{self.base_url}/git/refs"
+            payload = {"ref": f"refs/heads/{branch}", "sha": sha}
+            create_resp = requests.post(create_url, json=payload, headers=self.headers)
+            create_resp.raise_for_status()
+
     def create_pull_request(self, title: str, head: str, base: str, body: str):
         url = f"{self.base_url}/pulls"
         payload = {"title": title, "head": head, "base": base, "body": body}
