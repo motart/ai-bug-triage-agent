@@ -59,10 +59,19 @@ def init_agent() -> BugTriageAgent:
     return BugTriageAgent(jira, vcs, analyzer, review_platform)
 
 
-@app.route("/webhook", methods=["POST"])
+@app.route("/webhook", methods=["POST", "GET"])
 def webhook() -> tuple:
     """Handle Jira webhook calls for newly created bug issues."""
-    payload = request.get_json(force=True)
+    if request.method == "GET":
+        if "payload" in request.args:
+            try:
+                payload = json.loads(request.args["payload"])
+            except json.JSONDecodeError:
+                payload = {}
+        else:
+            payload = request.args.to_dict()
+    else:
+        payload = request.get_json(force=True)
     if not isinstance(payload, dict):
         return jsonify({"error": "invalid payload"}), 400
 

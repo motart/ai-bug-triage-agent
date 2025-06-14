@@ -2,8 +2,9 @@ from typing import List, Dict
 
 
 class CodeAnalyzer:
-    def analyze_bug(self, bug_description: str, files: List[str]) -> Dict[str, str]:
-        """Analyze the code and return a suggested fix as a dictionary mapping file paths to patch text."""
-        # Placeholder for AI analysis logic
-        print(f"Analyzing bug: {bug_description} in {files}")
+    def analyze_bug(self, title: str, description: str, files: List[str]) -> Dict[str, str]:
+        """Analyze the bug title and description to suggest code fixes."""
+
+        bug_text = f"{title} {description}".strip()
+        print(f"Analyzing bug: {bug_text} in {files}")
         return {file: "# TODO: implement fix" for file in files}

@@ -30,3 +30,20 @@ class GitHubConnector:
         response = requests.post(url, json=payload, headers=self.headers)
         response.raise_for_status()
         return response.json()
+
+    def search_code(self, keywords: list[str], max_results: int = 5) -> list[str]:
+        """Search the repository for files containing the given keywords."""
+
+        results: list[str] = []
+        for word in keywords:
+            query = f"{word} repo:{self.repo}"
+            url = "https://api.github.com/search/code"
+            resp = requests.get(url, params={"q": query}, headers=self.headers)
+            if resp.status_code != 200:
+                continue
+            data = resp.json()
+            for item in data.get("items", [])[:max_results]:
+                path = item.get("path")
+                if path and path not in results:
+                    results.append(path)
+        return results
