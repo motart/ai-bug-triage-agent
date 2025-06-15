@@ -177,7 +177,7 @@ graph TD
     Agent[AI Bug Triage Agent]
     Analyzer[Bug Analyzer Service]
     Learner[Code Learner Service]
-    VCS[VCS (GitHub/Perforce)]
+    VCS["VCS (GitHub/Perforce)"]
     Review[Review Platform]
     Infra[Terraform Infrastructure]
     Jira --> Webhook
