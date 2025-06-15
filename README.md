@@ -1,16 +1,16 @@
 # ai-bug-triage-agent
 
-This project provides a skeleton implementation for an AI-driven bug triage agent. The agent fetches bugs from Jira, analyzes the code base, suggests fixes, and creates code reviews in GitHub or Perforce Swarm. Infrastructure is created on AWS using Terraform, and the agent can be extended to learn from reviewer feedback.
+This project provides an AI-driven bug triage agent. The agent receives bug tickets from Jira via webhook, analyzes the code base, suggests fixes, and creates code reviews in GitHub or Perforce Swarm. Infrastructure can be provisioned with Terraform, and the agent learns from reviewer feedback.
 
 
 ## Features
-- **Jira Integration** – Retrieve open bugs from a Jira project using the REST API.
+- **Jira Integration** – Process new bug issues delivered via Jira webhook events.
 - **Code Analysis** – Analyze bug titles and descriptions with an open source language model and locate affected files using the GitHub code search API to generate a suggested fix.
 - **Version Control Support** – Connect to GitHub or Perforce and create GitHub
   pull requests or Swarm reviews. The version control system is set with
   `VCS_TYPE` and the review platform with `REVIEW_PLATFORM` (use `github_pr` for
   GitHub Pull Requests or `swarm` for Swarm reviews).
-- **Extensibility** – Placeholder hooks for incorporating AI models and learning from reviewer feedback.
+- **Learning** – The agent remembers past tickets and reviewer feedback to improve future suggestions.
 
 ## Running the Agent
 
@@ -142,7 +142,7 @@ Steps to enable this feature:
 This simple memory grows over time and helps the agent suggest fixes based on previous reviews.
 
 ## Notes
-This codebase provides a starting point only. Actual integration with Jira, Perforce, GitHub, and AWS requires additional configuration and authentication setup. The code analysis and learning components are simplified placeholders.
+The project includes working integrations with Jira, GitHub, Perforce, and Terraform. Provide your own credentials to enable each connector. The analysis and learning components use open-source models.
 
 
 ## Microservices
