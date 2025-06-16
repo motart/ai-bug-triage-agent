@@ -8,3 +8,6 @@ flask
 transformers
 torch
 numpy
+llama-index
+faiss-cpu
+gpt4all
