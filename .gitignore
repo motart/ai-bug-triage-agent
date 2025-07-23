@@ -26,10 +26,6 @@ htmlcov/
 .mypy_cache/
 .pyre/
 
-# Terraform state
-.terraform/
-*.tfstate
-*.tfstate.*
 
 # Jupyter Notebook
 .ipynb_checkpoints
