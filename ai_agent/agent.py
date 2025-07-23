@@ -1,19 +1,17 @@
 from typing import List
 
 from .connectors.jira import JiraConnector
-from .connectors.perforce import PerforceConnector
 from .connectors.github import GitHubConnector
 from .analysis import CodeAnalyzer
 
 
 class BugTriageAgent:
-    def __init__(
-        self, jira: JiraConnector, vcs, analyzer: CodeAnalyzer, review_platform: str
-    ):
+    """Handle bug triage using Jira and GitHub."""
+
+    def __init__(self, jira: JiraConnector, github: GitHubConnector, analyzer: CodeAnalyzer):
         self.jira = jira
-        self.vcs = vcs
+        self.github = github
         self.analyzer = analyzer
-        self.review_platform = review_platform
 
     def triage(self, project_key: str):
         bugs = self.jira.get_open_bugs(project_key)
@@ -40,29 +38,16 @@ class BugTriageAgent:
             for w in (title + " " + description).split()
             if len(w) > 3
         }
-        if isinstance(self.vcs, GitHubConnector):
-            return self.vcs.search_code(list(words))
-        return []
+        return self.github.search_code(list(words))
 
-    def create_review(self, bug_key: str, summary: str, fix: dict):
-        if self.review_platform == "github_pr" and isinstance(
-            self.vcs, GitHubConnector
-        ):
-            branch = f"bugfix-{bug_key}".lower().replace(" ", "-")
-            self.vcs.ensure_branch(branch, "main")
-            if fix:
-                self.vcs.commit_files(branch, fix, "Automated fix")
-            github_pr = self.vcs.create_pull_request(
-                title=f"Fix: {summary}",
-                head=branch,
-                base="main",
-                body="Automated fix",
-            )
-            return github_pr.get("html_url")
-        elif self.review_platform == "swarm" and isinstance(
-            self.vcs, PerforceConnector
-        ):
-            review = self.vcs.create_swarm_review(summary, list(fix.keys()))
-            return review.get("review_url")
-        else:
-            raise ValueError("Unsupported review platform for the configured VCS")
+    def create_review(self, bug_key: str, summary: str, fix: dict) -> str:
+        """Create a GitHub pull request with the suggested fix."""
+
+        branch = f"bugfix-{bug_key}".lower().replace(" ", "-")
+        self.github.ensure_branch(branch, "main")
+        if fix:
+            self.github.commit_files(branch, fix, "Automated fix")
+        github_pr = self.github.create_pull_request(
+            title=f"Fix: {summary}", head=branch, base="main", body="Automated fix"
+        )
+        return github_pr.get("html_url")
