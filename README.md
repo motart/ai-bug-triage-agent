@@ -47,6 +47,24 @@ python -m ai_agent
 If `JIRA_WS_URL` is defined, the agent connects to that WebSocket and
 processes bugs as they are reported instead of fetching them from Jira.
 
+## Configuring Jira
+
+1. **Create an API token** for the account the agent should use. On Jira
+   Server this can be done from *Profile → Personal Access Tokens*. Save the
+   generated token somewhere safe.
+2. **Fill out the environment variables** in your `.env` file:
+   - `JIRA_URL` – base URL of your Jira instance, e.g. `https://jira.example.com`.
+   - `JIRA_USER` – the username associated with the token.
+   - `JIRA_TOKEN` – the API token from the previous step.
+   - `JIRA_PROJECT` – project key containing your bug tickets.
+3. **Create a webhook** in Jira so new issues reach the agent. Navigate to
+   *Administration → System → Webhooks*, add a webhook pointing at
+   `https://<your-server>/webhook`, and enable the **Issue Created** event (you
+   can restrict it to the project if desired).
+4. **Run the agent** using `python -m ai_agent` to triage your existing open
+   bug issues. The agent fetches all open bugs from the configured project and
+   submits pull requests with suggested fixes.
+
 ## Webhook Server
 
 To run a persistent server that handles Jira webhook events, set the desired
