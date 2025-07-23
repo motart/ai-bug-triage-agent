@@ -5,7 +5,6 @@ from .connectors.github import GitHubConnector
 from .analysis import CodeAnalyzer
 from .memory import SimpleMemory
 from .agent import BugTriageAgent
-from .terraform_infra import TerraformInfrastructure
 from .connectors.jira_ws import JiraWebSocketClient
 
 
@@ -35,12 +34,6 @@ def main():
 
     github = GitHubConnector(repo, gh_token)
     agent = BugTriageAgent(jira, github, analyzer)
-
-    tf_dir = os.environ.get("TERRAFORM_DIR")
-    if tf_dir:
-        infra = TerraformInfrastructure(tf_dir)
-        infra.apply()
-
     ws_url = os.environ.get("JIRA_WS_URL")
     if ws_url:
         ws = JiraWebSocketClient(ws_url)

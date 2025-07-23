@@ -17,7 +17,6 @@ from .connectors.github import GitHubConnector
 from .analysis import CodeAnalyzer
 from .memory import SimpleMemory
 from .agent import BugTriageAgent
-from .terraform_infra import TerraformInfrastructure
 
 
 app = Flask(__name__)
@@ -90,16 +89,10 @@ def main() -> None:
     global agent
     agent = init_agent()
 
-    tf_dir = os.environ.get("TERRAFORM_DIR")
-    if tf_dir:
-        infra = TerraformInfrastructure(tf_dir)
-        infra.apply()
-
     port = int(os.environ.get("PORT", 8000))
     host = os.environ.get("HOST", "0.0.0.0")
     print(f"Starting webhook server on {host}:{port}")
     app.run(host=host, port=port)
-
 
 
 if __name__ == "__main__":

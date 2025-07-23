@@ -1,6 +1,6 @@
 # ai-bug-triage-agent
 
-This project provides an AI-driven bug triage agent. The agent receives bug tickets from Jira via webhook, analyzes the code base, suggests fixes, and creates code reviews in GitHub. Infrastructure can be provisioned with Terraform, and the agent learns from reviewer feedback.
+This project provides an AI-driven bug triage agent. The agent receives bug tickets from Jira via webhook, analyzes the code base, suggests fixes, and creates code reviews in GitHub. The agent also learns from reviewer feedback.
 
 
 ## Features
@@ -31,8 +31,6 @@ The variables include:
   stripped automatically when querying issues.
 - `GITHUB_REPO` and `GITHUB_TOKEN` – repository and token used for creating pull
   requests.
-- To provision infrastructure with Terraform, set `TERRAFORM_DIR` to the
-  directory containing your Terraform configuration.
 - To listen for new bugs over a WebSocket, set `JIRA_WS_URL` to the
   endpoint providing bug create events.
 - `PORT` and `HOST` allow configuring the webhook server's port and host.
@@ -102,14 +100,6 @@ The tunnel stays active only while `cloudflared` is running and provides a
 convenient static endpoint for testing.
 
 
-## Terraform Infrastructure
-
-Infrastructure is created with Terraform using the
-`TerraformInfrastructure` helper in `ai_agent/terraform_infra.py`. Set the
-`TERRAFORM_DIR` environment variable to a directory containing Terraform
-configuration files. The helper will run `terraform init` and `terraform apply
--auto-approve` prior to running the agent.
-
 ## Learning from Tickets and Code
 
 The agent can build a small memory of past bug tickets and their fixes using open source models.
@@ -124,7 +114,7 @@ Steps to enable this feature:
 This simple memory grows over time and helps the agent suggest fixes based on previous reviews.
 
 ## Notes
-The project includes working integrations with Jira, GitHub, and Terraform. Provide your own credentials to enable each connector. The analysis and learning components use open-source models.
+The project includes working integrations with Jira and GitHub. Provide your own credentials to enable each connector. The analysis and learning components use open-source models.
 
 
 ## Microservices
@@ -161,12 +151,10 @@ graph TD
     Learner[Code Learner Service]
     VCS[GitHub]
     Review[Pull Request]
-    Infra[Terraform Infrastructure]
     Jira --> Webhook
     Webhook --> Agent
     Agent --> Analyzer
     Agent --> Learner
     Agent --> VCS
     VCS --> Review
-    Agent --> Infra
 ```
